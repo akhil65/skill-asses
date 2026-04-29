@@ -1,29 +1,34 @@
 ╔════════════════════════════════════════════════════════════════════════════════╗
-║                 SECURITY SKILLS ASSESSMENT - QUICK REFERENCE                    ║
+║          SECURITY SKILLS ASSESSMENT - HYBRID FRAMEWORK QUICK REFERENCE           ║
 ╚════════════════════════════════════════════════════════════════════════════════╝
 
+FRAMEWORK: Hybrid (claude-md-improver + Security Domain Expertise)
+SCORING: 0-100 scale with 9 transparent criteria
+
 WHAT YOU HAVE:
-  • Assessment prompt (SECURITY_SKILLS_ASSESSMENT_PROMPT.md)
-  • Preparation script (prepare-skills-assessment.ps1 or .bat)
-  • Complete documentation (SETUP_AND_USAGE_GUIDE.md)
+  • Hybrid assessment prompt (SECURITY_SKILLS_ASSESSMENT_PROMPT.md)
+  • Preparation scripts (prepare-skills-assessment.ps1 or .bat)
+  • Complete documentation (ASSESSMENT_METHODOLOGY_GUIDE.md)
 
 ─────────────────────────────────────────────────────────────────────────────────
 STEP 1: PREPARE FILES (3 MINUTES)
 ─────────────────────────────────────────────────────────────────────────────────
 
-Windows (PowerShell):
-  1. Open PowerShell in your skills folder
-  2. Run: .\prepare-skills-assessment.ps1
-  3. Wait for ✅ confirmation message
+Windows (PowerShell - Recommended):
+  1. Open PowerShell in folder with: prepare-skills-assessment.ps1
+  2. Ensure you have folder: skills/ (or customize in script)
+  3. Run: .\prepare-skills-assessment.ps1
+  4. Wait for ✅ confirmation message
 
-Windows (Batch):
-  1. Open Command Prompt in your skills folder
-  2. Run: prepare-skills-assessment.bat
-  3. Press Enter to exit
+Windows (Batch - Backup):
+  1. Open Command Prompt in folder with: prepare-skills-assessment.bat
+  2. Ensure you have folder: skills/
+  3. Run: prepare-skills-assessment.bat
+  4. Press Enter to exit
 
-What the script does:
-  ✓ Finds all your skills.md files
-  ✓ Combines with assessment prompt
+What the scripts do:
+  ✓ Find all skills.md files in 'skills/' folder (customizable)
+  ✓ Combine with hybrid assessment prompt
   ✓ Creates: assessment-output/security-skills-assessment-input_[date].md
 
 ─────────────────────────────────────────────────────────────────────────────────
@@ -44,11 +49,17 @@ STEP 2: RUN ASSESSMENT (5-10 MINUTES)
 5. Paste the file (Ctrl+V)
 
 6. Type this message:
-   "Please assess these security skills.md files using the assessment rubric
-    provided above. Generate a comprehensive report with file-by-file analysis,
-    domain-level summaries, organizational gaps, and remediation roadmap."
+   "Please assess these security skills.md files using the HYBRID assessment
+    framework provided above (Layer 1: Core Quality + Layer 2: Security).
 
-7. Send and wait (Claude takes 2-5 minutes)
+    Generate a comprehensive report including:
+    - File-by-file scores across all 9 dimensions
+    - Layer 1 & 2 breakdowns with specific feedback
+    - Domain-level health assessment
+    - Organizational gaps and metrics
+    - Phased remediation roadmap with owners"
+
+7. Send and wait (Claude takes 2-5 minutes for hybrid assessment)
 
 ─────────────────────────────────────────────────────────────────────────────────
 STEP 3: SAVE & SHARE (5 MINUTES)
@@ -67,45 +78,42 @@ STEP 3: SAVE & SHARE (5 MINUTES)
 EXPECTED OUTPUT
 ─────────────────────────────────────────────────────────────────────────────────
 
-The report includes:
-  ✓ Executive summary (scores, gaps, files needing updates)
-  ✓ File-by-file analysis (5 dimensions: 1-10 scale each)
-  ✓ Domain summaries (AI/LLM, Backend, DevOps, Frontend, Cross-cutting)
-  ✓ Critical organizational gaps (HIGH/MEDIUM risk)
-  ✓ Remediation roadmap (Phase 1, 2, 3)
+The report includes (HYBRID FRAMEWORK):
+  ✓ Executive summary (composite scores 0-100, grade A-F, gaps identified)
+  ✓ File-by-file analysis (9 dimensions: Layer 1 quality + Layer 2 security)
+  ✓ Layer 1 breakdown (Core Quality: 6 criteria from claude-md-improver)
+  ✓ Layer 2 breakdown (Security-Specific: 3 criteria + domain expertise)
+  ✓ Domain-level summaries (AI/LLM, Backend, DevOps, Frontend, Cross-cutting)
+  ✓ Critical organizational gaps (HIGH/MEDIUM risk with owners)
+  ✓ Phased remediation roadmap (Phase 1/2/3 with timelines & effort)
   ✓ Next steps & governance recommendations
 
 ─────────────────────────────────────────────────────────────────────────────────
 ASSESSMENT DIMENSIONS
 ─────────────────────────────────────────────────────────────────────────────────
 
-Each skill.md is scored 1-10 on:
+HYBRID FRAMEWORK: 9 Dimensions, 0-100 Scoring
 
-1. STRUCTURAL COMPLETENESS
-   → Does it have all required sections?
-   → Frontmatter, overview, examples, gaps documented?
+LAYER 1: CORE QUALITY (6 dimensions × 50% weight)
+  1. Commands/Workflows → Actionable implementation guidance?
+  2. Architecture Clarity → Can engineers understand the context?
+  3. Non-obvious Patterns → Are gotchas and edge cases documented?
+  4. Conciseness → Scannable, no fluff?
+  5. Currency → Tools/threats current (2025-2026)?
+  6. Actionability → Instructions executable, not vague?
 
-2. THREAT COVERAGE
-   → Addresses current attacks (2025-2026)?
-   → Maps to OWASP, CWE, industry frameworks?
+LAYER 2: SECURITY-SPECIFIC (3 dimensions × 50% weight)
+  7. Threat Coverage → Addresses current attacks? Maps to OWASP/CWE?
+  8. Compliance & Standards → Aligns with NIST, ISO27001, regulations?
+  9. Cross-Skill Integration → Clear dependencies? No duplication?
 
-3. PRACTICAL ACTIONABILITY
-   → Can engineers implement it?
-   → Code examples, step-by-step guidance present?
-
-4. TOOL & FRAMEWORK CURRENCY
-   → References current tools & versions?
-   → Aligns with standards (NIST, STRIDE)?
-
-5. CROSS-SKILL INTEGRATION
-   → How well does it fit in the broader ecosystem?
-   → Avoids duplication with other skills?
-
-Composite Score: Average of 5 dimensions
-  • 40-50 = Excellent
-  • 30-40 = Good
-  • 20-30 = Needs improvement
-  • <20  = Critical gaps
+Composite Score = (Layer 1 avg × 50%) + (Layer 2 avg × 50%)
+  • A (90-100) = Comprehensive, current, actionable ✅
+  • B (80-89) = Good coverage, minor gaps ✅
+  • C (70-79) = Basic coverage, some gaps ⚠️
+  • D (60-69) = Sparse/outdated ⚠️
+  • E (50-59) = Significant gaps ❌
+  • F (<50) = Critical gaps ❌
 
 ─────────────────────────────────────────────────────────────────────────────────
 TRANSFERABILITY TO ANOTHER PC
@@ -117,7 +125,7 @@ To use on another Windows PC:
    ✓ SECURITY_SKILLS_ASSESSMENT_PROMPT.md
    ✓ prepare-skills-assessment.ps1
    ✓ prepare-skills-assessment.bat
-   ✓ Your entire 03_security skills files/ folder
+   ✓ Your entire skills/ folder
 
 2. Copy to other PC
 
@@ -140,7 +148,7 @@ SOLUTION: Ensure prompt file and script in same folder as skills directory
 
 PROBLEM: File too large for Claude
 SOLUTION: Assess by domain instead
-  Example: .\prepare-skills-assessment.ps1 -SkillsDir "03_security skills files\backend"
+  Example: .\prepare-skills-assessment.ps1 -SkillsDir "skills\backend"
 
 PROBLEM: Claude output cuts off
 SOLUTION: Ask Claude to continue:
@@ -157,13 +165,13 @@ Assess all skills:
   .\prepare-skills-assessment.ps1
 
 Assess only AI/LLM skills:
-  .\prepare-skills-assessment.ps1 -SkillsDir "03_security skills files\ai-engineer"
+  .\prepare-skills-assessment.ps1 -SkillsDir "skills\ai-engineer"
 
 Assess only Backend skills:
-  .\prepare-skills-assessment.ps1 -SkillsDir "03_security skills files\backend"
+  .\prepare-skills-assessment.ps1 -SkillsDir "skills\backend"
 
 Assess only DevOps skills:
-  .\prepare-skills-assessment.ps1 -SkillsDir "03_security skills files\devops"
+  .\prepare-skills-assessment.ps1 -SkillsDir "skills\devops"
 
 Specify custom output folder:
   .\prepare-skills-assessment.ps1 -OutputDir "C:\my-assessments"
@@ -203,10 +211,11 @@ IMPORTANT NOTES
 
 ─────────────────────────────────────────────────────────────────────────────────
 
-For detailed instructions: See SETUP_AND_USAGE_GUIDE.md
-For assessment rubric:      See SECURITY_SKILLS_ASSESSMENT_PROMPT.md
-For step-by-step walkthrough: See assessment-output/ASSESSMENT_INSTRUCTIONS.txt
+For hybrid framework explanation: See ASSESSMENT_METHODOLOGY_GUIDE.md ← START HERE
+For what changed:               See HYBRID_ASSESSMENT_SUMMARY.md
+For assessment rubric:          See SECURITY_SKILLS_ASSESSMENT_PROMPT.md
+For cleanup & migration:        See CLEANUP_AND_IGNORE_GUIDE.md
 
-Questions? Check the SETUP_AND_USAGE_GUIDE.md Troubleshooting section.
+Questions? Check ASSESSMENT_METHODOLOGY_GUIDE.md or CLEANUP_AND_IGNORE_GUIDE.md
 
 Generated: 2026-04-29
