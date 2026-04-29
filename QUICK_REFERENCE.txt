@@ -1,0 +1,212 @@
+╔════════════════════════════════════════════════════════════════════════════════╗
+║                 SECURITY SKILLS ASSESSMENT - QUICK REFERENCE                    ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+WHAT YOU HAVE:
+  • Assessment prompt (SECURITY_SKILLS_ASSESSMENT_PROMPT.md)
+  • Preparation script (prepare-skills-assessment.ps1 or .bat)
+  • Complete documentation (SETUP_AND_USAGE_GUIDE.md)
+
+─────────────────────────────────────────────────────────────────────────────────
+STEP 1: PREPARE FILES (3 MINUTES)
+─────────────────────────────────────────────────────────────────────────────────
+
+Windows (PowerShell):
+  1. Open PowerShell in your skills folder
+  2. Run: .\prepare-skills-assessment.ps1
+  3. Wait for ✅ confirmation message
+
+Windows (Batch):
+  1. Open Command Prompt in your skills folder
+  2. Run: prepare-skills-assessment.bat
+  3. Press Enter to exit
+
+What the script does:
+  ✓ Finds all your skills.md files
+  ✓ Combines with assessment prompt
+  ✓ Creates: assessment-output/security-skills-assessment-input_[date].md
+
+─────────────────────────────────────────────────────────────────────────────────
+STEP 2: RUN ASSESSMENT (5-10 MINUTES)
+─────────────────────────────────────────────────────────────────────────────────
+
+1. Open: assessment-output/security-skills-assessment-input_[date].md
+
+2. Copy entire contents:
+   • Ctrl+A (select all)
+   • Ctrl+C (copy)
+
+3. Go to: https://claude.ai
+   (OR use Claude in VS Code, Cowork, or your IDE)
+
+4. Create new conversation
+
+5. Paste the file (Ctrl+V)
+
+6. Type this message:
+   "Please assess these security skills.md files using the assessment rubric
+    provided above. Generate a comprehensive report with file-by-file analysis,
+    domain-level summaries, organizational gaps, and remediation roadmap."
+
+7. Send and wait (Claude takes 2-5 minutes)
+
+─────────────────────────────────────────────────────────────────────────────────
+STEP 3: SAVE & SHARE (5 MINUTES)
+─────────────────────────────────────────────────────────────────────────────────
+
+1. Copy the report from Claude
+
+2. Save as: assessment-output/security-skills-assessment-report_[date].md
+
+3. Share with stakeholders:
+   • CTO / VP Security
+   • Security team
+   • Engineering leads
+
+─────────────────────────────────────────────────────────────────────────────────
+EXPECTED OUTPUT
+─────────────────────────────────────────────────────────────────────────────────
+
+The report includes:
+  ✓ Executive summary (scores, gaps, files needing updates)
+  ✓ File-by-file analysis (5 dimensions: 1-10 scale each)
+  ✓ Domain summaries (AI/LLM, Backend, DevOps, Frontend, Cross-cutting)
+  ✓ Critical organizational gaps (HIGH/MEDIUM risk)
+  ✓ Remediation roadmap (Phase 1, 2, 3)
+  ✓ Next steps & governance recommendations
+
+─────────────────────────────────────────────────────────────────────────────────
+ASSESSMENT DIMENSIONS
+─────────────────────────────────────────────────────────────────────────────────
+
+Each skill.md is scored 1-10 on:
+
+1. STRUCTURAL COMPLETENESS
+   → Does it have all required sections?
+   → Frontmatter, overview, examples, gaps documented?
+
+2. THREAT COVERAGE
+   → Addresses current attacks (2025-2026)?
+   → Maps to OWASP, CWE, industry frameworks?
+
+3. PRACTICAL ACTIONABILITY
+   → Can engineers implement it?
+   → Code examples, step-by-step guidance present?
+
+4. TOOL & FRAMEWORK CURRENCY
+   → References current tools & versions?
+   → Aligns with standards (NIST, STRIDE)?
+
+5. CROSS-SKILL INTEGRATION
+   → How well does it fit in the broader ecosystem?
+   → Avoids duplication with other skills?
+
+Composite Score: Average of 5 dimensions
+  • 40-50 = Excellent
+  • 30-40 = Good
+  • 20-30 = Needs improvement
+  • <20  = Critical gaps
+
+─────────────────────────────────────────────────────────────────────────────────
+TRANSFERABILITY TO ANOTHER PC
+─────────────────────────────────────────────────────────────────────────────────
+
+To use on another Windows PC:
+
+1. Copy these to a USB/cloud:
+   ✓ SECURITY_SKILLS_ASSESSMENT_PROMPT.md
+   ✓ prepare-skills-assessment.ps1
+   ✓ prepare-skills-assessment.bat
+   ✓ Your entire 03_security skills files/ folder
+
+2. Copy to other PC
+
+3. Run the same script:
+   • PowerShell: .\prepare-skills-assessment.ps1
+   • Batch: prepare-skills-assessment.bat
+
+4. Follow same assessment steps above
+
+─────────────────────────────────────────────────────────────────────────────────
+TROUBLESHOOTING
+─────────────────────────────────────────────────────────────────────────────────
+
+PROBLEM: Script won't run
+SOLUTION: PowerShell execution policy
+  Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+
+PROBLEM: "File not found" error
+SOLUTION: Ensure prompt file and script in same folder as skills directory
+
+PROBLEM: File too large for Claude
+SOLUTION: Assess by domain instead
+  Example: .\prepare-skills-assessment.ps1 -SkillsDir "03_security skills files\backend"
+
+PROBLEM: Claude output cuts off
+SOLUTION: Ask Claude to continue:
+  "The response was cut off. Please continue the report from where you left off."
+
+PROBLEM: Unclear what gaps mean
+SOLUTION: See SETUP_AND_USAGE_GUIDE.md for detailed explanations
+
+─────────────────────────────────────────────────────────────────────────────────
+USEFUL COMMANDS
+─────────────────────────────────────────────────────────────────────────────────
+
+Assess all skills:
+  .\prepare-skills-assessment.ps1
+
+Assess only AI/LLM skills:
+  .\prepare-skills-assessment.ps1 -SkillsDir "03_security skills files\ai-engineer"
+
+Assess only Backend skills:
+  .\prepare-skills-assessment.ps1 -SkillsDir "03_security skills files\backend"
+
+Assess only DevOps skills:
+  .\prepare-skills-assessment.ps1 -SkillsDir "03_security skills files\devops"
+
+Specify custom output folder:
+  .\prepare-skills-assessment.ps1 -OutputDir "C:\my-assessments"
+
+─────────────────────────────────────────────────────────────────────────────────
+KEY DATES & NEXT STEPS
+─────────────────────────────────────────────────────────────────────────────────
+
+After you get the report:
+
+WEEK 1: Review findings
+  □ Share report with stakeholders
+  □ Discuss HIGH-risk gaps
+  □ Identify quick wins
+
+WEEK 2-3: Plan remediation
+  □ Assign owners for each gap
+  □ Set update timeline
+  □ Create tickets/issues
+
+ONGOING:
+  □ Execute Phase 1 improvements (4-6 weeks)
+  □ Execute Phase 2 improvements (1-2 quarters)
+  □ Schedule quarterly threat landscape reviews
+  □ Re-run assessment in 6 months
+
+─────────────────────────────────────────────────────────────────────────────────
+IMPORTANT NOTES
+─────────────────────────────────────────────────────────────────────────────────
+
+✓ This assessment is 100% transferable to another PC
+✓ Script is safe (read-only, doesn't modify your skills files)
+✓ Assessment prompt is reusable (save for future use)
+✓ Report format is audit-friendly (good for compliance)
+✓ Can be integrated into your governance process
+✓ Quarterly re-runs recommended (to catch new threats)
+
+─────────────────────────────────────────────────────────────────────────────────
+
+For detailed instructions: See SETUP_AND_USAGE_GUIDE.md
+For assessment rubric:      See SECURITY_SKILLS_ASSESSMENT_PROMPT.md
+For step-by-step walkthrough: See assessment-output/ASSESSMENT_INSTRUCTIONS.txt
+
+Questions? Check the SETUP_AND_USAGE_GUIDE.md Troubleshooting section.
+
+Generated: 2026-04-29
