@@ -2,74 +2,69 @@
 # Purpose: Combine all skills.md files with assessment prompt for batch evaluation
 # Platform: Windows (PowerShell 5.0+)
 # Usage: .\prepare-skills-assessment.ps1
+# Updated: 2026-04-29 (Hybrid Framework)
 
 param(
-    [string]$SkillsDir = "03_security skills files",
+    [string]$SkillsDir = "skills",
     [string]$PromptFile = "SECURITY_SKILLS_ASSESSMENT_PROMPT.md",
     [string]$OutputDir = "assessment-output"
 )
 
-# Colors for console output
-$colors = @{
-    Green   = "`e[32m"
-    Yellow  = "`e[33m"
-    Red     = "`e[31m"
-    Blue    = "`e[34m"
-    Reset   = "`e[0m"
-}
-
-Write-Host "$($colors.Blue)╔════════════════════════════════════════════════════════════╗$($colors.Reset)"
-Write-Host "$($colors.Blue)║  Security Skills Assessment Preparation Script (Windows)      ║$($colors.Reset)"
-Write-Host "$($colors.Blue)╚════════════════════════════════════════════════════════════╝$($colors.Reset)"
+Write-Host ""
+Write-Host "======================================================================" -ForegroundColor Cyan
+Write-Host "  Security Skills Assessment - Hybrid Framework" -ForegroundColor Cyan
+Write-Host "======================================================================" -ForegroundColor Cyan
 Write-Host ""
 
 # Step 1: Validate prerequisites
-Write-Host "$($colors.Yellow)📋 Step 1: Validating prerequisites...$($colors.Reset)"
+Write-Host "[1/5] Validating prerequisites..." -ForegroundColor Yellow
 
 if (-not (Test-Path $PromptFile)) {
-    Write-Host "$($colors.Red)❌ ERROR: Assessment prompt file not found: $PromptFile$($colors.Reset)"
-    Write-Host "   Please ensure SECURITY_SKILLS_ASSESSMENT_PROMPT.md is in the current directory."
+    Write-Host "ERROR: Assessment prompt file not found: $PromptFile" -ForegroundColor Red
+    Write-Host "Please ensure SECURITY_SKILLS_ASSESSMENT_PROMPT.md is in the current directory."
     exit 1
 }
 
 if (-not (Test-Path $SkillsDir)) {
-    Write-Host "$($colors.Red)❌ ERROR: Skills directory not found: $SkillsDir$($colors.Reset)"
-    Write-Host "   Please ensure the skills directory path is correct."
+    Write-Host "ERROR: Skills directory not found: $SkillsDir" -ForegroundColor Red
+    Write-Host "Please ensure the skills directory exists: $SkillsDir"
     exit 1
 }
 
-Write-Host "$($colors.Green)✅ Prerequisites validated$($colors.Reset)"
+Write-Host "[OK] Prerequisites validated" -ForegroundColor Green
+Write-Host "     Prompt: $PromptFile"
+Write-Host "     Skills: $SkillsDir"
 Write-Host ""
 
 # Step 2: Create output directory
-Write-Host "$($colors.Yellow)📁 Step 2: Setting up output directory...$($colors.Reset)"
+Write-Host "[2/5] Setting up output directory..." -ForegroundColor Yellow
 
 if (-not (Test-Path $OutputDir)) {
     New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null
-    Write-Host "$($colors.Green)✅ Created output directory: $OutputDir$($colors.Reset)"
+    Write-Host "[OK] Created output directory: $OutputDir" -ForegroundColor Green
 } else {
-    Write-Host "$($colors.Green)✅ Output directory exists: $OutputDir$($colors.Reset)"
+    Write-Host "[OK] Output directory exists: $OutputDir" -ForegroundColor Green
 }
 
 Write-Host ""
 
 # Step 3: Collect all skills.md files
-Write-Host "$(@colors.Yellow)📂 Step 3: Collecting skills.md files...$($colors.Reset)"
+Write-Host "[3/5] Collecting skills.md files..." -ForegroundColor Yellow
 
 $skillFiles = Get-ChildItem -Path $SkillsDir -Filter "*.md" -Recurse -Exclude "index.md" |
               Sort-Object FullName
 
 if ($skillFiles.Count -eq 0) {
-    Write-Host "$($colors.Red)❌ ERROR: No skills.md files found in $SkillsDir$($colors.Reset)"
+    Write-Host "ERROR: No skills.md files found in $SkillsDir" -ForegroundColor Red
     exit 1
 }
 
-Write-Host "$($colors.Green)✅ Found $($skillFiles.Count) skills.md files:$($colors.Reset)"
-$skillFiles | ForEach-Object { Write-Host "   • $($_.FullName)" }
+Write-Host "[OK] Found $($skillFiles.Count) skills.md files:" -ForegroundColor Green
+$skillFiles | ForEach-Object { Write-Host "     * $($_.Name)" }
 Write-Host ""
 
 # Step 4: Create combined assessment input file
-Write-Host "$($colors.Yellow)🔄 Step 4: Combining prompt + skills files...$($colors.Reset)"
+Write-Host "[4/5] Combining hybrid prompt + skills files..." -ForegroundColor Yellow
 
 $timestamp = Get-Date -Format "yyyy-MM-dd_HHmmss"
 $outputFile = "$OutputDir\security-skills-assessment-input_$timestamp.md"
@@ -78,27 +73,23 @@ $outputFile = "$OutputDir\security-skills-assessment-input_$timestamp.md"
 $combinedContent = Get-Content $PromptFile -Raw
 
 # Add separator
-$combinedContent += "`n`n`n"
-$combinedContent += "═" * 80
-$combinedContent += "`n"
-$combinedContent += "## SKILLS FILES TO ASSESS`n"
-$combinedContent += "═" * 80
 $combinedContent += "`n`n"
+$combinedContent += "=" * 80 + "`n"
+$combinedContent += "## SKILLS FILES TO ASSESS`n"
+$combinedContent += "=" * 80 + "`n`n"
 
 # Add each skills.md file
 $fileCount = 0
 $skillFiles | ForEach-Object {
     $fileCount++
-    $relPath = Resolve-Path $_.FullName -Relative
+    $relPath = $_.FullName -Replace [regex]::Escape((Get-Location).Path + "\"), ""
 
-    Write-Host "   [$fileCount/$($skillFiles.Count)] Adding: $relPath"
+    Write-Host "     [$fileCount/$($skillFiles.Count)] Adding: $($_.Name)"
 
     $combinedContent += "`n`n"
-    $combinedContent += "─" * 80
-    $combinedContent += "`n"
+    $combinedContent += "-" * 80 + "`n"
     $combinedContent += "### File: $relPath`n"
-    $combinedContent += "─" * 80
-    $combinedContent += "`n`n"
+    $combinedContent += "-" * 80 + "`n`n"
 
     $combinedContent += Get-Content $_.FullName -Raw
     $combinedContent += "`n"
@@ -107,210 +98,88 @@ $skillFiles | ForEach-Object {
 # Write combined file
 Set-Content -Path $outputFile -Value $combinedContent -Encoding UTF8
 
-Write-Host "$($colors.Green)✅ Combined file created: $outputFile$($colors.Reset)"
-Write-Host "   Size: $((Get-Item $outputFile).Length / 1MB)MB"
+$fileSizeMB = [math]::Round((Get-Item $outputFile).Length / 1MB, 2)
+Write-Host "[OK] Combined file created: $outputFile" -ForegroundColor Green
+Write-Host "     Size: $fileSizeMB MB"
+Write-Host "     Files: $fileCount"
 Write-Host ""
 
-# Step 5: Create additional helper files
-Write-Host "$($colors.Yellow)📝 Step 5: Creating helper documentation...$($colors.Reset)"
+# Step 5: Create helper README
+Write-Host "[5/5] Creating documentation..." -ForegroundColor Yellow
 
-# Create a README for the assessment
 $readmeContent = @"
-# Security Skills Assessment Package
+# Security Skills Assessment Input Package
 
-## Files in this Package
+## Framework: Hybrid (claude-md-improver + Security)
 
-1. **security-skills-assessment-input_[timestamp].md**
-   - Combined prompt + all skills files
-   - Ready to paste into Claude
-   - Do not edit this file
+This assessment uses:
+- Layer 1: Core Quality Criteria (6 dimensions)
+- Layer 2: Security-Specific (3 dimensions)
+- Scoring: 0-100 scale
 
-2. **ASSESSMENT_INSTRUCTIONS.txt**
-   - Step-by-step instructions for running the assessment
-   - Contains copy-paste ready commands
+See: ASSESSMENT_METHODOLOGY_GUIDE.md
 
-## How to Use This Package
+## What You Have
 
-### Option A: Using Claude Web Chat (Recommended)
-1. Open https://claude.ai
-2. Create a new conversation
-3. Copy the contents of: security-skills-assessment-input_[timestamp].md
-4. Paste into the chat
-5. Send the message
-6. Claude will generate the assessment report
-7. Copy the report and save to: security-skills-assessment-report_[timestamp].md
+File: security-skills-assessment-input_$timestamp.md
+- Combined hybrid prompt + all $fileCount skills files
+- Ready to paste into Claude
 
-### Option B: Using Claude in VS Code
-1. Open VS Code with Claude extension
-2. Create a new Claude Chat window
-3. Paste the combined input file contents
-4. Send the message
-5. Copy the report and save locally
+## How to Use
 
-### Option C: Using Claude Command Line (if available)
-1. Copy the input file to your local machine
-2. Use: claude < security-skills-assessment-input_[timestamp].md > report.md
+1. Open this file in your editor
+2. Select All (Ctrl+A) and Copy (Ctrl+C)
+3. Go to https://claude.ai or open Claude in VS Code
+4. Create new conversation and paste
+5. Request assessment:
 
-## Important Notes
+   "Please assess these security skills.md files using the hybrid assessment
+    framework provided above (Layer 1: Core Quality + Layer 2: Security).
 
-- The input file is large (multiple MB) — this is expected
-- Claude will take 2-5 minutes to complete the assessment
-- The report will be detailed and structured
-- Save the report with a timestamp for tracking versions
+    Include in your report:
+    - File-by-file scores across all 9 dimensions
+    - Layer 1 & 2 breakdowns with specific feedback
+    - Domain-level health assessment
+    - Organizational-level gaps and metrics
+    - Phased remediation roadmap with owners and timelines"
 
-## Next Steps After Assessment
+6. Wait 2-5 minutes for Claude to complete
+7. Copy report and save as: security-skills-assessment-report_[date].md
 
-1. Review the report for critical gaps
-2. Assign ownership for gap remediation
-3. Set timelines for each phase
-4. Create issues/tickets for skill improvements
-5. Schedule quarterly threat landscape reviews
+## Documentation Files
+
+READ IN THIS ORDER:
+1. ASSESSMENT_METHODOLOGY_GUIDE.md — Understand the 9 criteria (15 min)
+2. HYBRID_ASSESSMENT_SUMMARY.md — What changed & why (5 min)
+3. QUICK_REFERENCE.txt — 1-page quick start (2 min)
 
 ## Questions?
 
-If the assessment fails or produces unexpected results:
-- Check that all skills files are properly formatted (.md)
-- Ensure no binary files are in the skills directory
-- Try with a smaller subset of files first
-- Contact your security team lead
+See FILES_STATUS.md for file descriptions and what to use.
 
-Generated: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
+---
+Generated: $((Get-Date).ToString("yyyy-MM-dd HH:mm:ss"))
+Framework: Hybrid (claude-md-improver + Security Domain Expertise)
 "@
 
-$readmeFile = "$OutputDir\README.txt"
-Set-Content -Path $readmeFile -Value $readmeContent -Encoding UTF8
-Write-Host "$($colors.Green)✅ Created: README.txt$($colors.Reset)"
-
-# Create instructions file
-$instructionsContent = @"
-═══════════════════════════════════════════════════════════════════════════════
-  SECURITY SKILLS ASSESSMENT — STEP-BY-STEP INSTRUCTIONS
-═══════════════════════════════════════════════════════════════════════════════
-
-WHAT YOU HAVE:
-  • security-skills-assessment-input_[timestamp].md
-    → This contains the assessment prompt + all your skills.md files combined
-    → Ready to paste into Claude
-
-STEP 1: OPEN CLAUDE
-  → Go to https://claude.ai
-  → OR open VS Code with Claude extension
-  → OR use Claude in your IDE/editor of choice
-
-STEP 2: COPY THE INPUT FILE
-  → Open: security-skills-assessment-input_[timestamp].md
-  → Select All (Ctrl+A or Cmd+A)
-  → Copy (Ctrl+C or Cmd+C)
-
-STEP 3: PASTE INTO CLAUDE
-  → In a new Claude conversation, paste the entire contents
-  → You should see the prompt followed by all your .md files
-
-STEP 4: SEND TO CLAUDE
-  → Type or paste this message alongside the input file:
-
-  "Please assess these security skills.md files using the assessment rubric
-   and output format provided above. Generate a comprehensive report with
-   file-by-file analysis, domain-level summaries, and organizational gaps."
-
-  → Click Send / Press Enter
-
-STEP 5: WAIT FOR ASSESSMENT
-  → Claude will process all files (takes 2-5 minutes)
-  → You'll see a detailed report with:
-    ✓ Individual file scores
-    ✓ Strength/weakness analysis
-    ✓ Critical gaps by domain
-    ✓ Remediation roadmap
-
-STEP 6: SAVE THE REPORT
-  → Copy the report from Claude
-  → Save it as: security-skills-assessment-report_[timestamp].md
-  → Store in: assessment-output/ folder
-  → Keep for audit trail & tracking changes
-
-STEP 7: SHARE WITH TEAM
-  → Share the report with security stakeholders
-  → Discuss findings in your security review meeting
-  → Assign ownership for gap remediation
-  → Create tickets for updates
-
-═══════════════════════════════════════════════════════════════════════════════
-
-EXPECTED OUTPUT:
-
-The report will include:
-  • Executive summary (total files, average scores, gaps identified)
-  • File-by-file analysis with 5 dimension scores (1-10 each)
-  • Domain-level summaries (AI/LLM, Backend, DevOps, Frontend, Cross-cutting)
-  • Critical organizational gaps with risk levels
-  • Phase-based remediation roadmap
-  • Next steps for governance & maintenance
-
-═══════════════════════════════════════════════════════════════════════════════
-
-TROUBLESHOOTING:
-
-Q: File is too large to paste into Claude?
-A: Break it into smaller parts:
-   - Create separate assessments for each domain folder
-   - Run: .\prepare-skills-assessment.ps1 -SkillsDir "03_security skills files/ai-engineer"
-
-Q: Claude output is incomplete?
-A: If the response is cut off, ask Claude to continue:
-   "Please continue the assessment report from where you left off"
-
-Q: Want to assess only one domain?
-A: Edit the PowerShell script to filter by folder:
-   $skillFiles = Get-ChildItem -Path "$SkillsDir\ai-engineer" -Filter "*.md" -Recurse
-
-Q: Need to run this on a different PC?
-A:
-   1. Copy these 3 files to the other PC:
-      • prepare-skills-assessment.ps1
-      • SECURITY_SKILLS_ASSESSMENT_PROMPT.md
-      • Your "03_security skills files" folder
-   2. Run: .\prepare-skills-assessment.ps1
-   3. Follow the instructions above
-
-═══════════════════════════════════════════════════════════════════════════════
-
-QUICK REFERENCE:
-
-Command:           What it does:
-─────────────────────────────────────────────────────────────────────────────
-.\prepare-skills-  Generates combined input file with default settings
-assessment.ps1
-
-.\prepare-skills-  Generates input for only AI/LLM security skills
-assessment.ps1 -SkillsDir "03_security skills files/ai-engineer"
-
-.\prepare-skills-  Specifies custom output directory
-assessment.ps1 -OutputDir "C:\assessments"
-
-═══════════════════════════════════════════════════════════════════════════════
-
-Generated: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
-"@
-
-$instructionsFile = "$OutputDir\ASSESSMENT_INSTRUCTIONS.txt"
-Set-Content -Path $instructionsFile -Value $instructionsContent -Encoding UTF8
-Write-Host "$($colors.Green)✅ Created: ASSESSMENT_INSTRUCTIONS.txt$($colors.Reset)"
-
+Set-Content -Path "$OutputDir\README.txt" -Value $readmeContent -Encoding UTF8
+Write-Host "[OK] Created: $OutputDir\README.txt" -ForegroundColor Green
 Write-Host ""
 
 # Final summary
-Write-Host "$($colors.Blue)╔════════════════════════════════════════════════════════════╗$($colors.Reset)"
-Write-Host "$($colors.Blue)║  ✅ Assessment Package Ready!                              ║$($colors.Reset)"
-Write-Host "$($colors.Blue)╚════════════════════════════════════════════════════════════╝$($colors.Reset)"
+Write-Host "======================================================================" -ForegroundColor Green
+Write-Host "  Hybrid Assessment Package Ready!" -ForegroundColor Green
+Write-Host "======================================================================" -ForegroundColor Green
 Write-Host ""
-Write-Host "$($colors.Green)📦 Files created in: $OutputDir$($colors.Reset)"
+Write-Host "Next steps:" -ForegroundColor Cyan
+Write-Host "  1. Open: $outputFile"
+Write-Host "  2. Copy all contents (Ctrl+A, Ctrl+C)"
+Write-Host "  3. Paste into Claude"
+Write-Host "  4. Request assessment (see README.txt for prompt)"
+Write-Host "  5. Save report to: assessment-output/security-skills-assessment-report_[date].md"
 Write-Host ""
-Write-Host "Next steps:"
-Write-Host "  1. Read: $OutputDir\README.txt"
-Write-Host "  2. Follow: $OutputDir\ASSESSMENT_INSTRUCTIONS.txt"
-Write-Host "  3. Copy contents of: $outputFile"
-Write-Host "  4. Paste into Claude and run assessment"
-Write-Host ""
-Write-Host "Questions? Check ASSESSMENT_INSTRUCTIONS.txt for troubleshooting."
+Write-Host "Documentation:" -ForegroundColor Cyan
+Write-Host "  - ASSESSMENT_METHODOLOGY_GUIDE.md (understand 9 criteria)"
+Write-Host "  - HYBRID_ASSESSMENT_SUMMARY.md (what changed)"
+Write-Host "  - QUICK_REFERENCE.txt (quick start)"
 Write-Host ""

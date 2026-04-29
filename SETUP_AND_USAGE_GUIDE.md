@@ -2,7 +2,23 @@
 
 ## Overview
 
-This package contains everything you need to assess your organization's security skills.md files using a comprehensive industry-standard rubric.
+This package contains everything you need to assess your organization's security skills.md files using a **hybrid, industry-standard rubric**.
+
+### What's New: Hybrid Framework
+
+This assessment combines:
+- **Layer 1:** claude-md-improver's proven quality methodology (6 core criteria: actionability, clarity, patterns, conciseness, currency, architecture)
+- **Layer 2:** Security domain expertise (3 criteria: threat coverage, compliance/standards, cross-skill integration)
+- **Layers 3-7:** Comprehensive analysis (coverage gaps, domain health, org metrics, remediation roadmap)
+
+**Result:** Professional, credible, transparent assessment (0-100 scale, clear rubric for each criterion)
+
+### New Documentation Files
+
+Before running the assessment, read:
+1. **ASSESSMENT_METHODOLOGY_GUIDE.md** — Explains all 9 criteria, scoring, how to interpret results
+2. **HYBRID_ASSESSMENT_SUMMARY.md** — Overview of what changed, why this approach is better
+3. **QUICK_REFERENCE.txt** — 1-page quick start
 
 **What you get:**
 - ✅ Assessment prompt with detailed evaluation criteria
@@ -37,16 +53,23 @@ skill assess/
 
 ## Quick Start (2 minutes)
 
+**NEW:** This package now uses a **hybrid assessment framework** combining:
+- ✅ claude-md-improver's proven quality methodology (6 criteria)
+- ✅ Security-specific expertise (3 security dimensions)
+- ✅ Transparent 0-100 scoring with clear rubric
+
+**Read first:** `ASSESSMENT_METHODOLOGY_GUIDE.md` to understand the framework.
+
 ### For Windows (Modern PowerShell)
 
 ```powershell
 # 1. Open PowerShell in the folder with your skills files
 # 2. Run:
-.\prepare-skills-assessment.ps1
+.\prepare-skills-assessment-FIXED.ps1
 
 # 3. Script will:
 #    ✓ Find all skills.md files
-#    ✓ Combine with assessment prompt
+#    ✓ Combine with hybrid assessment prompt
 #    ✓ Create output in assessment-output/ folder
 #    ✓ Display next steps
 ```
@@ -131,10 +154,12 @@ prepare-skills-assessment.bat
 REM Wait for it to complete and show summary
 ```
 
+**Note:** The .bat file uses the original prompt. For the hybrid framework, use PowerShell script (recommended).
+
 **What the script does:**
 1. Validates that all required files exist
 2. Finds all `.md` files in your skills directory
-3. Combines them into a single file with the assessment prompt
+3. Combines them into a single file with the assessment prompt (hybrid framework)
 4. Creates `assessment-output/` folder
 5. Generates helper documentation
 
